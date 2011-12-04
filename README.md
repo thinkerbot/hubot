@@ -19,6 +19,12 @@ and I was wrong. After looking into it, I decided that GH-Hubot is like, well,
 anything people wore in the 80's. You're going to look back on that in a few years
 and say "what the fuck was I *thinking*?".
 
+Yeah, and GH-Hubot needs Redis. Why the fuck would you need bot-side persistence
+so bad that you start a networked server to store it instead of using a file.
+
+Want to do bot-side persistence with my Hubot? Go nuts, do what you will, but
+write your own adapter/plugin for it.
+
 ## Getting Your Own
 
 Dependencies you'll need:
