@@ -37,6 +37,7 @@ by running `sudo pip install pyfire`.
 ## Run Hubot
 
 Run Hubot for Campfire:
+
 ```console
 export HUBOT_CAMPFIRE_SUBDOMAIN=xxx
 export HUBOT_CAMPFIRE_PASSWORD=xxx
