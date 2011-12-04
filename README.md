@@ -1,84 +1,83 @@
-# Hubot
+# Hubot (Ted Dziuba's Fork)
 
-This is a version of GitHub's Campfire bot, hubot. He's pretty cool.
+This is a fork of GitHub's Hubot that's substantially less shitty.
 
-You'll probably never have to hack on this repo directly. Instead this repo
-provides a library that's distributed by npm that you simply require in your
-project.
+For as much as GitHub tithes the Church of Unix, they really blew it on Hubot.
+If you think about it, Hubot is a lot like old-school CGI. It takes text in
+from an *adapter*, decides what to do with that request, and spits text back out.
+
+Sound familiar? Yeah, because it's standard in/standard out. Unix can do that
+all by itself with out all the stupid Node.js cancer.
+
+This rewrite of Hubot accomplishes exactly that.
+
+# Motivation
+
+I wanted GH-Hubot to deploy some code, which, in my setup, amounts to running
+`fab deploy`, and thought that Hubot would let me just run arbitrary shell commands,
+and I was wrong. After looking into it, I decided that GH-Hubot is like, well,
+anything people wore in the 80's. You're going to look back on that in a few years
+and say "what the fuck was I *thinking*?".
 
 ## Getting Your Own
 
-Make sure you have [node.js](http://nodejs.org/) and [npm](http://npmjs.org/)
-installed.
+Dependencies you'll need:
 
-Download the [latest version of hubot](https://github.com/github/hubot/downloads).
+  - bash
+  - find
 
-Then follow the instructions in the README in the `hubot` directory.
+Basically the stuff you will find in a Unix/Linux distro worth using.
+
+
+Some of the plugins and adapters have additional dependencies, most notably,
+the campfire adapter needs Python and the `pip` package "pyfire", which you can get
+by running `sudo pip install pyfire`.
+
+
+## Run Hubot
+
+Run Hubot for Campfire:
+`console
+export HUBOT_CAMPFIRE_SUBDOMAIN=xxx
+export HUBOT_CAMPFIRE_PASSWORD=xxx
+export HUBOT_CAMPFIRE_ROOM=xxx
+export HUBOT_CAMPFIRE_USERNAME=xxx
+bin/hubot -a campfire
+`
+
+Or just run it in shell"
+
+`console
+bin/hubot
+`
+
 
 ## Adapters
 
-Hubot ships with Campfire and Shell adapters. A number of third-party adapters
-exist which you can install with npm and then use that with your hubot.
+My Hubot ships with both Campfire and shell adapters.
 
 ### Creating an Adapter
 
-Creating an adapter for hubot is very simple. So simple infact hubot himself
-has written his own adapters. Adapters in the
-[third-party](https://github.com/github/hubot/tree/master/src/adapters/third-party)
-directory will need to have ownership claimed preferably by the original
-contributor.
+Way easier here than with GitHub's Hubot. Plus, you don't have to dirty your hands with JavaScript.
 
-1. Start a project for the hubot adapter npm package
-2. Add your main adapter file as the `main` file in `package.json`
+An **adapter** in this fork of Hubot is an arbitrary program. It's best to make it a shell
+script, because you get to use the `list_plugins` bash function. Have a look at the
+shell adapter for a basic example.
 
-**NOTE**: If you've already released an adapter, remove the hubot dependecy
-from the `package.json` file as this causes hubot to be installed twice
-and causes some issues.
+`list_plugins` will return a list of paths to plugin binaries, which you can call as you see fit.
 
-Below is an example of requiring hubot to extend `Adapter` and exporting
-a `use` function that will be used to load your adapter when used.
+## Scripts (Plugins)
 
-You will also have access to a `@robot.logger` instance which you can use
-for logging. Check out [log.js](https://github.com/visionmedia/log.js) for more
-information about the logging library used in hubot.
+Again, easier and more flexible than GH-Hubot. A plugin here is an arbitrary executable.
 
-```coffeescript
+The preferred idiom is that every plugin gets executed for every line of input. If your plugin
+has nothing to say for that input line, it should say nothing and exit normally. If it wants
+to respond, it should print its response on standard out.
 
-Robot   = require("hubot").robot()
-Adapter = require("hubot").adapter()
+The adapter will read that response and do what it pleases with it.
 
-class MyAdapter extends Adapter
-  # You'll want to override the various methods see existing adapters
-  # ...
+Check out the `campfire` adapter for an example of how to execute plugins in parallel.
 
-exports.use = (robot) ->
-  new MyAdapter robot
-
-```
-
-Please submit issues and pull requests for third party adapters to the adapter
-repo not this repo unless it's the Campfire or Shell adapter.
-
-## Scripts
-
-Hubot ships with a number of default scripts, but there's a growing number of
-extras in the [hubot-scripts](https://github.com/github/hubot-scripts)
-repository. `hubot-scripts` is a way to share scripts with the entire
-community.
-
-Check out the [README](https://github.com/github/hubot-scripts#readme)
-for more help on installing individual scripts.
-
-## Local Testing
-
-Install all of the required dependencies by running `npm install`.
-
-It's easy to test scripts locally with an interactive shell:
-
-    % export PATH="node_modules/.bin:$PATH"
-    % bin/hubot
-
-... and to run tests:
-
-    % make test
-
+One cool feature that the Unix version of Hubot has that the Node.js version
+does not is that, to add a plugin, you just need to put the executable in the
+plugins directory. You do not need to restart Hubot.

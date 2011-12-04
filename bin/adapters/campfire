@@ -22,6 +22,7 @@ do
     list_plugins
     for plugin in $PLUGINS
     do
+        # Plugins are executed in parallel
         $plugin "$input_line" | $SAY &
     done
 done
