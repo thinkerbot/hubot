@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+echo "$1" | grep -q "^PING$" && echo "PONG"
+
+echo "$1" | grep -q "^ECHO " && echo ${1:5}
+
+echo "$1" | grep -q "^TIME$" && date
+
+echo "$1" | grep -q "^HOST$" && uname -a
