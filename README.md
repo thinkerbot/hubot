@@ -11,7 +11,7 @@ all by itself with out all the stupid Node.js cancer.
 
 This rewrite of Hubot accomplishes exactly that.
 
-# Motivation
+## Motivation
 
 I wanted GH-Hubot to deploy some code, which, in my setup, amounts to running
 `fab deploy`, and thought that Hubot would let me just run arbitrary shell commands,
@@ -37,19 +37,19 @@ by running `sudo pip install pyfire`.
 ## Run Hubot
 
 Run Hubot for Campfire:
-`console
+```console
 export HUBOT_CAMPFIRE_SUBDOMAIN=xxx
 export HUBOT_CAMPFIRE_PASSWORD=xxx
 export HUBOT_CAMPFIRE_ROOM=xxx
 export HUBOT_CAMPFIRE_USERNAME=xxx
 bin/hubot -a campfire
-`
+```
 
 Or just run it in shell"
 
-`console
+```console
 bin/hubot
-`
+```
 
 
 ## Adapters
