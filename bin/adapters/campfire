@@ -1,0 +1,27 @@
+#!/bin/bash
+
+MY_DIR="$( cd "$( dirname $0 )" && pwd)"
+
+LISTEN="$MY_DIR/_campfire/listen"
+SAY="$MY_DIR/_campfire/say"
+
+if [ ! -e $LISTEN ]
+then
+    echo "Campfire listen command not found: $LISTEN"
+    exit 1
+fi
+
+if [ ! -e $SAY ]
+then
+    echo "Campfire say command not found: $SAY"
+    exit 1
+fi
+
+$LISTEN | while read input_line
+do
+    list_plugins
+    for plugin in $PLUGINS
+    do
+        $plugin "$input_line" | $SAY &
+    done
+done

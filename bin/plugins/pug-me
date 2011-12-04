@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "$1" | grep -q "pug me"
+
+if [ "$?" == "0" ]
+then
+    curl -sq http://pugme.herokuapp.com/random | cut -d \" -f 4
+fi
