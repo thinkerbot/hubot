@@ -1,35 +1,19 @@
 #!/bin/bash
 
-declare -a PLUGINS="$(find plugins -type f -perm /777)"
+# Set to '0' to disable debug output
 DEBUG=1
 
 # Defaults
 IRC_HOST="irc.freenode.net"
 IRC_PORT=6667
-IRC_NICK="bash-hubot"
+IRC_NICK="tshubot"
 IRC_PASS=""
 declare -a IRC_CHAN="#roborally"
 
-IRC_PREFIX='.'
-OWNER='twinshadow'
-
 _say () {
-  if [ -n $DEBUG ]; then
-    echo "$*"
-  fi
+  test $DEBUG -gt 0 && echo "$*"
   printf "%s\r\n" "$*" >&3
   sleep 1
-}
-
-_admin () {
-  chan="$1"
-  shift
-  case "$1" in
-    .nick)
-      _say NICK $2;;
-    .join)
-      _say JOIN $2;;
-  esac
 }
 
 # Clean up children at exit
@@ -37,35 +21,28 @@ trap "kill 0" EXIT
 
 # Open connection to server
 exec 3<>/dev/tcp/$IRC_HOST/$IRC_PORT || exit 1
-echo "Connected to the server."
 
-[ -n "$IRC_PASS" ] && _say PASS $IRC_PASS
-_say NICK $IRC_NICK
-_say USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK
+[ -n "$IRC_PASS" ] && _say "PASS $IRC_PASS"
+_say "NICK $IRC_NICK"
+_say "USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK"
 
 for chan in ${IRC_CHAN[@]}; do
-  _say JOIN $chan
+  _say "JOIN $chan"
 done
 
 while read -a line; do
-  if [ -n "$DEBUG" ]; then
-    echo ${line[*]}
-  fi
-
-  test ${line[0]} = 'PING' && _say PONG && continue
+  test $DEBUG -gt 0 && echo "${line[*]}"
+  test ${line[0]} = 'PING' && _say "PONG" && continue
 
   if [ ${line[1]} = 'PRIVMSG' ]; then
     chan="${line[2]}"
     txt="$(echo ${line[3]:1} | tr -d '\n\r')"
-    if [ "${txt:0:1}" = "$IRC_PREFIX" ]; then
-      _admin $txt
-    else
-      for plugin in $PLUGINS; do
-        resp="$($plugin "$txt")"
-        if [ -n "$resp" ]; then
-          _say PRIVMSG "$chan" :"$resp"
-        fi
-      done
-    fi
+    list_plugins
+    for plugin in $PLUGINS; do
+      resp="$($plugin "$txt")"
+      if [ -n "$resp" ]; then
+        _say "PRIVMSG $chan :$resp"
+      fi
+    done
   fi
 done <&3
