@@ -1,16 +1,35 @@
 #!/bin/bash
-# Made by liberally copying from https://github.com/halhen/shic
-# The greatest form of flattery is imitation.
+
+declare -a PLUGINS="$(find plugins -type f -perm /777)"
+DEBUG=1
 
 # Defaults
-[ -z $IRC_HOST ] && IRC_HOST="irc.freenode.net"
-[ -z $IRC_PORT ] && IRC_PORT=6667
-[ -z $IRC_NICK ] && IRC_NICK="bash-hubot"
-[ -z $IRC_PASS ] && IRC_PASS=""
-[ -z $IRC_CHAN ] && IRC_CHAN="#tshdw-test"
+IRC_HOST="irc.freenode.net"
+IRC_PORT=6667
+IRC_NICK="bash-hubot"
+IRC_PASS=""
+declare -a IRC_CHAN="#roborally"
+
+IRC_PREFIX='.'
+OWNER='twinshadow'
 
 _say () {
-    printf "%s\r\n" "$*" >&3
+  if [ -n $DEBUG ]; then
+    echo "$*"
+  fi
+  printf "%s\r\n" "$*" >&3
+  sleep 1
+}
+
+_admin () {
+  chan="$1"
+  shift
+  case "$1" in
+    .nick)
+      _say NICK $2;;
+    .join)
+      _say JOIN $2;;
+  esac
 }
 
 # Clean up children at exit
@@ -19,15 +38,34 @@ trap "kill 0" EXIT
 # Open connection to server
 exec 3<>/dev/tcp/$IRC_HOST/$IRC_PORT || exit 1
 echo "Connected to the server."
-_say "NICK $IRC_NICK"
-_say "USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK"
-for chan in $IRC_CHAN; do
-  _say "JOIN $chan"
+
+[ -n "$IRC_PASS" ] && _say PASS $IRC_PASS
+_say NICK $IRC_NICK
+_say USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK
+
+for chan in ${IRC_CHAN[@]}; do
+  _say JOIN $chan
 done
 
-while read line; do
-    list_plugins
-    for plugin in $PLUGINS; do
-        $plugin "$input_line" | _say &
-    done
+while read -a line; do
+  if [ -n "$DEBUG" ]; then
+    echo ${line[*]}
+  fi
+
+  test ${line[0]} = 'PING' && _say PONG && continue
+
+  if [ ${line[1]} = 'PRIVMSG' ]; then
+    chan="${line[2]}"
+    txt="${line[3]:1}"
+    if [ "${txt:0:1}" = "$IRC_PREFIX" ]; then
+      _admin $txt
+    else
+      for plugin in $PLUGINS; do
+        resp="$($plugin "$txt")"
+        if [ -n "$resp" ]; then
+          _say PRIVMSG "$chan" "$resp"
+        fi
+      done
+    fi
+  fi
 done <&3
