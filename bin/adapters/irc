@@ -1,14 +1,19 @@
 #!/bin/bash
+#
+# Shell options:
+# export IRC_HOST='irc.freenode.net'
+# export IRC_PORT='6667'
+# export IRC_NICK='thehubot'
+# export IRC_CHAN='#github #roborally'
+# export IRC_PASS='12345'
 
 # Set to '0' to disable debug output
 DEBUG=1
 
 # Defaults
-IRC_HOST="irc.freenode.net"
-IRC_PORT=6667
-IRC_NICK="tshubot"
-IRC_PASS=""
-declare -a IRC_CHAN="#roborally"
+test -z "$IRC_HOST" && echo 'IRC_HOST is not set' && exit 1
+test -z "$IRC_NICK" && echo 'IRC_NICK is not set' && exit 1
+test -z "$IRC_PORT" && IRC_PORT="6667"
 
 _say () {
   test $DEBUG -gt 0 && echo "$*"
@@ -22,11 +27,12 @@ trap "kill 0" EXIT
 # Open connection to server
 exec 3<>/dev/tcp/$IRC_HOST/$IRC_PORT || exit 1
 
-[ -n "$IRC_PASS" ] && _say "PASS $IRC_PASS"
+test -n "$IRC_PASS" && _say "PASS $IRC_PASS"
 _say "NICK $IRC_NICK"
 _say "USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK"
+sleep 5
 
-for chan in ${IRC_CHAN[@]}; do
+for chan in $IRC_CHAN; do
   _say "JOIN $chan"
 done
 
