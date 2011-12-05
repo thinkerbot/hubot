@@ -56,14 +56,14 @@ while read -a line; do
 
   if [ ${line[1]} = 'PRIVMSG' ]; then
     chan="${line[2]}"
-    txt="${line[3]:1}"
+    txt="$(echo ${line[3]:1} | tr -d '\n\r')"
     if [ "${txt:0:1}" = "$IRC_PREFIX" ]; then
       _admin $txt
     else
       for plugin in $PLUGINS; do
         resp="$($plugin "$txt")"
         if [ -n "$resp" ]; then
-          _say PRIVMSG "$chan" "$resp"
+          _say PRIVMSG "$chan" :"$resp"
         fi
       done
     fi
