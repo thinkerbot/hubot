@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# Shell options:
+# export IRC_HOST='irc.freenode.net'
+# export IRC_PORT='6667'
+# export IRC_NICK='thehubot'
+# export IRC_CHAN='#github #roborally'
+# export IRC_PASS='12345'
+
+# Set to '0' to disable debug output
+DEBUG=1
+
+# Defaults
+test -z "$IRC_HOST" && echo 'IRC_HOST is not set' && exit 1
+test -z "$IRC_NICK" && echo 'IRC_NICK is not set' && exit 1
+test -z "$IRC_PORT" && IRC_PORT="6667"
+
+_say () {
+  test $DEBUG -gt 0 && echo "$*"
+  printf "%s\r\n" "$*" >&3
+  sleep 1
+}
+
+# Clean up children at exit
+trap "kill 0" EXIT
+
+# Open connection to server
+exec 3<>/dev/tcp/$IRC_HOST/$IRC_PORT || exit 1
+
+test -n "$IRC_PASS" && _say "PASS $IRC_PASS"
+_say "NICK $IRC_NICK"
+_say "USER $IRC_NICK localhost $IRC_HOST :$IRC_NICK"
+sleep 5
+
+for chan in $IRC_CHAN; do
+  _say "JOIN $chan"
+done
+
+while read -a line; do
+  test $DEBUG -gt 0 && echo "${line[*]}"
+  test ${line[0]} = 'PING' && _say "PONG" && continue
+
+  if [ ${line[1]} = 'PRIVMSG' ]; then
+    chan="${line[2]}"
+    txt="$(echo ${line[3]:1} | tr -d '\n\r')"
+    list_plugins
+    for plugin in $PLUGINS; do
+      resp="$($plugin "$txt")"
+      if [ -n "$resp" ]; then
+        _say "PRIVMSG $chan :$resp"
+      fi
+    done
+  fi
+done <&3
