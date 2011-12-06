@@ -1,5 +1,6 @@
 import os
 import pyfire
+import sys
 
 def get_campfire_room():
     subdomain = os.environ.get("HUBOT_CAMPFIRE_SUBDOMAIN", None)
@@ -8,9 +9,9 @@ def get_campfire_room():
     room_name = os.environ.get("HUBOT_CAMPFIRE_ROOM", None)
 
     if not all([subdomain, username, password, room_name]):
-        print ("You must set HUBOT_CAMPFIRE_SUBDOMAIN "
-               "HUBOT_CAMPFIRE_USERNAME, HUBOT_CAMPFIRE_PASSWORD "
-               "and HUBOT_CAMPFIRE_ROOM")
+        sys.stderr.write("You must set HUBOT_CAMPFIRE_SUBDOMAIN "
+                         "HUBOT_CAMPFIRE_USERNAME, HUBOT_CAMPFIRE_PASSWORD "
+                         "and HUBOT_CAMPFIRE_ROOM\n")
         sys.exit(1)
 
     campfire = pyfire.Campfire(subdomain, username, password, ssl=True)
