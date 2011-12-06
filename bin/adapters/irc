@@ -16,8 +16,13 @@ test -z "$IRC_NICK" && echo 'IRC_NICK is not set' && exit 1
 test -z "$IRC_PORT" && IRC_PORT="6667"
 
 _say () {
-  test $DEBUG -gt 0 && echo "$*"
-  printf "%s\r\n" "$*" >&3
+  local IFS=''
+  while read -a input; do
+    for line in ${input[*]}; do
+      test $DEBUG -gt 0 && echo "$*$line\r\n"
+      printf "$*%s\r\n" "$line" >&3
+    done
+  done
   sleep 1
 }
 
@@ -45,10 +50,7 @@ while read -a line; do
     txt="$(echo ${line[3]:1} | tr -d '\n\r')"
     list_plugins
     for plugin in $PLUGINS; do
-      resp="$($plugin "$txt")"
-      if [ -n "$resp" ]; then
-        _say "PRIVMSG $chan :$resp"
-      fi
+      $plugin "$txt" | _say "PRIVMSG $chan :"
     done
   fi
 done <&3
