@@ -8,7 +8,7 @@
 # export IRC_PASS='12345'
 
 # Set to '0' to disable debug output
-DEBUG=1
+DEBUG=0
 
 # Defaults
 test -z "$IRC_HOST" && echo 'IRC_HOST is not set' && exit 1
@@ -40,9 +40,11 @@ while read -a line; do
   test $DEBUG -gt 0 && echo "${line[*]}"
   test ${line[0]} = 'PING' && _say "PONG" && continue
 
+
   if [ ${line[1]} = 'PRIVMSG' ]; then
     chan="${line[2]}"
-    txt="$(echo ${line[3]:1} | tr -d '\n\r')"
+    txt="$(echo ${line[@]:3} | tr -d '\n\r')"
+    txt=${txt:1}
     list_plugins
     for plugin in $PLUGINS; do
       resp="$($plugin "$txt")"
