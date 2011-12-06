@@ -4,7 +4,7 @@ MY_DIR="$( cd "$( dirname $0 )" && pwd)"
 
 if [ -z "$HUBOT_PLUGINS_DIR" ]
 then
-  HUBOT_PLUGINS_DIR=$MY_DIR/plugins
+  export HUBOT_PLUGINS_DIR=$MY_DIR/plugins
 fi
 
 if [ -z "$HUBOT_ADAPTERS_DIR" ]
