@@ -2,8 +2,15 @@
 
 MY_DIR="$( cd "$( dirname $0 )" && pwd)"
 
+LOGIN="$MY_DIR/_campfire/login"
 LISTEN="$MY_DIR/_campfire/listen"
 SAY="$MY_DIR/_campfire/say"
+
+if [ ! -e $LOGIN ]
+then
+    echo "Campfire login command not found: $LOGIN"
+    exit 1
+fi
 
 if [ ! -e $LISTEN ]
 then
@@ -16,6 +23,8 @@ then
     echo "Campfire say command not found: $SAY"
     exit 1
 fi
+
+$LOGIN
 
 $LISTEN | while read -r input_line
 do
