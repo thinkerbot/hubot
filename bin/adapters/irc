@@ -6,9 +6,7 @@
 # export IRC_NICK='thehubot'
 # export IRC_CHAN='#github #roborally'
 # export IRC_PASS='12345'
-
-# Set to '0' to disable debug output
-DEBUG=0
+# export IRC_DEBUG='1'
 
 # Defaults
 test -z "$IRC_HOST" && echo 'IRC_HOST is not set' && exit 1
@@ -16,9 +14,20 @@ test -z "$IRC_NICK" && echo 'IRC_NICK is not set' && exit 1
 test -z "$IRC_PORT" && IRC_PORT="6667"
 
 _say () {
-  test $DEBUG -gt 0 && echo "$*"
-  printf "%s\r\n" "$*" >&3
+  test -n "$IRC_DEBUG" && echo "$*$line\r\n"
+  printf "%s\r\n" "$1" >&3
   sleep 1
+}
+
+_sayevery () {
+  local IFS=''
+  while read -a input; do
+    for line in ${input[*]}; do
+      test -n "$IRC_DEBUG" && echo "$*$line\r\n"
+      printf "$*%s\r\n" "$line" >&3
+      sleep .5
+    done
+  done
 }
 
 # Clean up children at exit
@@ -37,7 +46,7 @@ for chan in $IRC_CHAN; do
 done
 
 while read -a line; do
-  test $DEBUG -gt 0 && echo "${line[*]}"
+  test -n "$IRC_DEBUG" && echo "${line[*]}"
   test ${line[0]} = 'PING' && _say "PONG" && continue
 
 
@@ -47,10 +56,7 @@ while read -a line; do
     txt=${txt:1}
     list_plugins
     for plugin in $PLUGINS; do
-      resp="$($plugin "$txt")"
-      if [ -n "$resp" ]; then
-        _say "PRIVMSG $chan :$resp"
-      fi
+      $plugin $txt | _sayevery "PRIVMSG $chan :"
     done
   fi
 done <&3
