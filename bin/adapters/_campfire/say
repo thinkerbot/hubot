@@ -6,13 +6,7 @@ if [ "$body" != "" ]
 then
   subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
   room=${HUBOT_CAMPFIRE_ROOM:-}
-
-  # Get the campfire token
-  token=$(
-    curl -s -b cookies.txt -c cookies.txt "https://$subdomain.campfirenow.com/member/edit" | 
-    grep 'id="token"' | 
-    sed -e 's/.*">\([^<]\{1,\}\)<.*/\1/'
-  )
+  token=${HUBOT_CAMPFIRE_TOKEN:-}
 
   # Post the message
   curl -s -u "$token:X" -H 'Content-Type: application/json' -d "{\"message\":{\"body\":\"$body\"}}" "https://$subdomain.campfirenow.com/room/$room/speak.json" > /dev/null

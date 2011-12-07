@@ -40,9 +40,8 @@ Run Hubot for Campfire:
 
 ```console
 export HUBOT_CAMPFIRE_SUBDOMAIN=xxx
-export HUBOT_CAMPFIRE_PASSWORD=xxx
 export HUBOT_CAMPFIRE_ROOM=xxx
-export HUBOT_CAMPFIRE_USERNAME=xxx
+export HUBOT_CAMPFIRE_TOKEN=xxx
 bin/hubot -a campfire
 ```
 

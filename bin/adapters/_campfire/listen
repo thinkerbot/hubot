@@ -2,21 +2,14 @@
 
 subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
 room=${HUBOT_CAMPFIRE_ROOM:-}
-cookies=${HUBOT_COOKIES_FILE:-var/hubot/cookies}
+token=${HUBOT_CAMPFIRE_TOKEN:-}
 
 ############################################################################
 # Setup stream to inbox
 ############################################################################
 
-# Enter the room
-curl -s -b "$cookies" -c "$cookies" "https://$subdomain.campfirenow.com/room/$room" > /dev/null
-
-# Get the campfire token
-token=$(
-  curl -s -b cookies.txt -c cookies.txt "https://$subdomain.campfirenow.com/member/edit" | 
-  grep 'id="token"' | 
-  sed -e 's/.*">\([^<]\{1,\}\)<.*/\1/'
-)
+# Join the room
+curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/join.xml"
 
 # Replace CR with LF so the output will be line delimited. Then use sed to
 # extract the body such that it will properly expand when read as a line and
