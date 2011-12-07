@@ -34,14 +34,14 @@ ADAPTER="$HUBOT_ADAPTERS_DIR/shell"
 # It is up to the adapters how to execute the plugins
 # (i.e. in serial or parallel) and what do do with the output.
 list_plugins() {
-    PLUGINS=`find $HUBOT_PLUGINS_DIR -maxdepth 1 -type f -executable`
+    PLUGINS=`find $HUBOT_PLUGINS_DIR -maxdepth 1 -type f -perm -o+x`
 }
 
 export -f list_plugins
 #export $PLUGINS
 
 list_adapters() {
-    ADAPTERS=`find $HUBOT_ADAPTERS_DIR -maxdepth 1 -type f -executable`
+    ADAPTERS=`find $HUBOT_ADAPTERS_DIR -maxdepth 1 -type f -perm -o+x`
 }
 
 
