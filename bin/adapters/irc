@@ -56,7 +56,7 @@ while read -a line; do
     txt=${txt:1}
     list_plugins
     for plugin in $PLUGINS; do
-      $plugin $txt | _sayevery "PRIVMSG $chan :"
+      $plugin "$txt" | _sayevery "PRIVMSG $chan :"
     done
   fi
 done <&3
