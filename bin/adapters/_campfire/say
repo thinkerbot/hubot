@@ -1,17 +1,19 @@
-#!/usr/bin/env python
+#!/bin/bash
 
-import sys
-from util import get_campfire_room
+body=$(cat - | sed -e 's/\([\"]\)/\\\1/g')
 
-def main():
-    to_say = sys.stdin.read().strip()
-    if not to_say:
-        return
+if [ "$body" != "" ]
+then
+  subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
+  room=${HUBOT_CAMPFIRE_ROOM:-}
 
-    room = get_campfire_room()
-    room.join()
-    room.speak(to_say)
+  # Get the campfire token
+  token=$(
+    curl -s -b cookies.txt -c cookies.txt "https://$subdomain.campfirenow.com/member/edit" | 
+    grep 'id="token"' | 
+    sed -e 's/.*">\([^<]\{1,\}\)<.*/\1/'
+  )
 
-
-if __name__ == "__main__":
-    main()
+  # Post the message
+  curl -s -u "$token:X" -H 'Content-Type: application/json' -d "{\"message\":{\"body\":\"$body\"}}" "https://$subdomain.campfirenow.com/room/$room/speak.json" > /dev/null
+fi
