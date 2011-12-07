@@ -16,6 +16,12 @@ test -z "$IRC_NICK" && echo 'IRC_NICK is not set' && exit 1
 test -z "$IRC_PORT" && IRC_PORT="6667"
 
 _say () {
+  test $DEBUG -gt 0 && echo "$*$line\r\n"
+  printf "%s\r\n" "$1" >&3
+  sleep 1
+}
+
+_sayevery () {
   local IFS=''
   while read -a input; do
     for line in ${input[*]}; do
@@ -23,7 +29,6 @@ _say () {
       printf "$*%s\r\n" "$line" >&3
     done
   done
-  sleep 1
 }
 
 # Clean up children at exit
@@ -52,7 +57,7 @@ while read -a line; do
     txt=${txt:1}
     list_plugins
     for plugin in $PLUGINS; do
-      $plugin "$txt" | _say "PRIVMSG $chan :"
+      $plugin $txt | _sayevery "PRIVMSG $chan :"
     done
   fi
 done <&3
