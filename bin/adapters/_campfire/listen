@@ -11,6 +11,6 @@ curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/joi
 # extract the body such that it will properly expand when read as a line and
 # used like "$line" (requires 'read -r')
 curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$HUBOT_CAMPFIRE_ROOM/live.json | 
-tr -u "\r" "\n" | 
-sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
-sed -le 's/\\\("\)/"/g'
+  tr -u "\r" "\n" | 
+  sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
+  sed -le 's/\\\("\)/"/g'
