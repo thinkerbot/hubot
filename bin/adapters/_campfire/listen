@@ -4,10 +4,6 @@ subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
 room=${HUBOT_CAMPFIRE_ROOM:-}
 token=${HUBOT_CAMPFIRE_TOKEN:-}
 
-############################################################################
-# Setup stream to inbox
-############################################################################
-
 # Join the room
 curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/join.xml"
 
