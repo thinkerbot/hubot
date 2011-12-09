@@ -82,16 +82,39 @@ do
   esac
 done
 
-if [ ! -e "$ADAPTER" ]
+LISTEN="$ADAPTER/listen"
+SAY="$ADAPTER/say"
+
+if [ ! -e "$LISTEN" ]
 then
-    echo "Could not find adapter: $ADAPTER"
+    echo "Adapter listen command not found: $LISTEN"
     exit 1
 fi
 
-if [ ! -x "$ADAPTER" ]
+if [ ! -e "$SAY" ]
 then
-    echo "Adapter $ADAPTER is not executable"
+    echo "Adapter say command not found: $SAY"
     exit 1
 fi
 
-$ADAPTER
+if [ ! -x "$LISTEN" ]
+then
+    echo "Adapter listen command is not executable: $LISTEN"
+    exit 1
+fi
+
+if [ ! -x "$SAY" ]
+then
+    echo "Adapter say command is not executable: $SAY"
+    exit 1
+fi
+
+$LISTEN | while read -r input_line
+do
+    list_plugins
+    for plugin in $PLUGINS
+    do
+        # Plugins are executed in parallel
+        $plugin "$input_line" | $SAY &
+    done
+done
