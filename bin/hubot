@@ -41,7 +41,7 @@ export -f list_plugins
 #export $PLUGINS
 
 list_adapters() {
-    ADAPTERS=`find $HUBOT_ADAPTERS_DIR -maxdepth 1 -type f -perm -o+x`
+    ADAPTERS=`find $HUBOT_ADAPTERS_DIR/* -maxdepth 1 -type d`
 }
 
 
