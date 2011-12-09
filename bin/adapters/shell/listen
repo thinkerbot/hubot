@@ -1,0 +1,12 @@
+#!/bin/bash
+
+printf "Type \"quit\" to quit\n" >&2
+while read -r -p "HUMAN> " input_line
+do
+  if [ "$input_line" == "quit" ]
+  then
+      printf "Bye.\n" >&2
+      exit 0;
+  fi
+  printf "$input_line\n"
+done
