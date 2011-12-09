@@ -1,25 +1,16 @@
-#!/usr/bin/env python
+#!/bin/bash
 
-import sys
-from util import get_campfire_room
+subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
+room=${HUBOT_CAMPFIRE_ROOM:-}
+token=${HUBOT_CAMPFIRE_TOKEN:-}
 
-def incoming(message):
-    if (message.is_text()
-        and not message.is_paste()
-        and not message.is_by_current_user()):
+# Join the room
+curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/join.xml"
 
-        print message.body
-        sys.stdout.flush()
-
-def error(e, room):
-    sys.stderr.write("Stopped streaming: %s\n" % e)
-
-
-def main():
-    room = get_campfire_room()
-    stream = room.get_stream(error_callback=error)
-    stream.attach(incoming).start()
-
-if __name__ == "__main__":
-    main()
-
+# Replace CR with LF so the output will be line delimited. Then use sed to
+# extract the body such that it will properly expand when read as a line and
+# used like "$line" (requires 'read -r')
+curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$HUBOT_CAMPFIRE_ROOM/live.json | 
+  tr -u "\r" "\n" | 
+  sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
+  sed -le 's/\\\("\)/"/g'

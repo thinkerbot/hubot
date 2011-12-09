@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-$LISTEN | while read input_line
+$LISTEN | while read -r input_line
 do
     list_plugins
     for plugin in $PLUGINS

@@ -34,21 +34,14 @@ Dependencies you'll need:
 
 Basically the stuff you will find in a Unix/Linux distro worth using.
 
-
-Some of the plugins and adapters have additional dependencies, most notably,
-the campfire adapter needs Python and the `pip` package "pyfire", which you can get
-by running `sudo pip install pyfire`.
-
-
 ## Run Hubot
 
 Run Hubot for Campfire:
 
 ```console
 export HUBOT_CAMPFIRE_SUBDOMAIN=xxx
-export HUBOT_CAMPFIRE_PASSWORD=xxx
 export HUBOT_CAMPFIRE_ROOM=xxx
-export HUBOT_CAMPFIRE_USERNAME=xxx
+export HUBOT_CAMPFIRE_TOKEN=xxx
 bin/hubot -a campfire
 ```
 
