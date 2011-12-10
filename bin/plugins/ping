@@ -1,12 +1,17 @@
 #!/bin/bash
 
-case "$1" in
-  PING)
-    echo PONG;;
-  "ECHO "*)
-    echo ${1:5};;
-  TIME)
-    date;;
-  HOST)
-    uname -a;;
-esac
+while read -r line
+do
+  case "$line" in
+    PING)
+      echo PONG;;
+    "ECHO "*)
+      echo ${1:5};;
+    TIME)
+      date;;
+    HOST)
+      uname -a;;
+    ERR)
+      exit 1;;
+  esac
+done

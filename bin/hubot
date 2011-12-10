@@ -109,12 +109,32 @@ then
     exit 1
 fi
 
-$LISTEN | while read -r input_line
+#
+# setup inbox fifos
+#
+
+list_plugins
+
+inbox_dir="var/hubot/inbox"
+rm "$inbox_dir"/*
+mkdir -p "$inbox_dir"
+
+for plugin in $PLUGINS
 do
-    list_plugins
-    for plugin in $PLUGINS
-    do
-        # Plugins are executed in parallel
-        $plugin "$input_line" | $SAY &
-    done
+  inbox="$inbox_dir/$(basename "$plugin")"
+  if ! [ -e "$inbox" ]
+  then mkfifo "$inbox"
+  fi
 done
+
+#
+# launch plugins
+#
+
+for plugin in $PLUGINS
+do
+  inbox="$inbox_dir/$(basename "$plugin")"
+  $plugin < "$inbox" | $SAY &
+done
+
+$LISTEN | tee "$inbox_dir"/* >/dev/null
