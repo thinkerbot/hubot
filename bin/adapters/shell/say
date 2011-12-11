@@ -1,5 +1,11 @@
 #!/bin/bash
 
-printf "\rHUBOT> " >&2
+if $HUBOT_TTY
+then printf "\rHUBOT> " >&2
+fi
+
 printf "%s\n" "$(cat)"
-printf "HUMAN> " >&2
+
+if $HUBOT_TTY
+then printf "HUMAN> " >&2
+fi

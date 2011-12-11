@@ -1,11 +1,16 @@
 #!/bin/bash
 
-printf "Type \"quit\" to quit\n" >&2
+if $HUBOT_TTY
+then printf "Type \"quit\" to quit\n" >&2
+fi
+
 while read -r -p "HUMAN> " input_line
 do
   if [ "$input_line" == "quit" ]
   then
-      printf "Bye.\n" >&2
+      if $HUBOT_TTY
+      then printf "Bye.\n" >&2
+      fi
       exit 0;
   fi
   printf "$input_line\n"

@@ -29,6 +29,12 @@ EOF
 HUBOT_PLUGINS=""
 HUBOT_ADAPTERS=""
 HUBOT_ADAPTER="$HUBOT_ADAPTERS_DIR/shell"
+HUBOT_TTY=false
+
+if [ -t 0 ]
+then HUBOT_TTY=true
+fi
+export HUBOT_TTY
 
 # This is the only Hubot function available to the adapters
 # It is up to the adapters how to execute the plugins
