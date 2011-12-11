@@ -109,6 +109,9 @@ then
     exit 1
 fi
 
+# Be thorough about cleaning up.  Ask nice and in 8 seconds be more direct.
+trap 'trap "sleep 8 && kill -KILL -$$ &" TERM; kill -TERM -$$' INT TERM EXIT
+
 #
 # setup inbox fifos
 #
@@ -119,18 +122,6 @@ inbox_dir="var/hubot/inbox"
 rm "$inbox_dir"/*
 mkdir -p "$inbox_dir"
 
-# Launch a hang process to hold open the fifos and thereby prevent a broken
-# pipe if one of the plugins exits prematurely.  Set a trap to cleanup the
-# hang loop on exit.
-hangpids=" "
-trap '
-status=$?
-for id in ${hangpids}
-do kill -9 "${id}"
-done
-exit $status
-' INT TERM EXIT
-
 for plugin in $PLUGINS
 do
   inbox="$inbox_dir/$(basename "$plugin")"
@@ -139,8 +130,8 @@ do
   then mkfifo "$inbox"
   fi
 
+  # hang onto the fifos thereby preventing broken pipes if a plugin exits
   while true; do sleep 1; done < "$inbox" > "$inbox" & 
-  hangpids="${hangpids}$! "
 done
 
 #
@@ -151,7 +142,7 @@ for plugin in $PLUGINS
 do
   inbox="$inbox_dir/$(basename "$plugin")"
   (
-    trap "ln -fs /dev/null '$inbox'; exit"  INT TERM EXIT
+    trap "ln -fs /dev/null '$inbox'" EXIT
     $plugin < "$inbox" | $SAY
   ) &
 done
