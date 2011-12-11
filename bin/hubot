@@ -121,10 +121,9 @@ do
     list_plugins
     for plugin in $HUBOT_PLUGINS
     do
-        # Plugins are executed in parallel
         printf "$input\n" | $plugin | 
         while read -r output
         do printf "$output\n" | $SAY
-        done &
+        done
     done
 done
