@@ -1,15 +1,15 @@
 #!/bin/bash
 
-MY_DIR="$( cd "$( dirname $0 )" && pwd)"
+HUBOT_BIN_DIR="$( cd "$( dirname $0 )" && pwd)"
 
 if [ -z "$HUBOT_PLUGINS_DIR" ]
 then
-  export HUBOT_PLUGINS_DIR=$MY_DIR/plugins
+  export HUBOT_PLUGINS_DIR=$HUBOT_BIN_DIR/plugins
 fi
 
 if [ -z "$HUBOT_ADAPTERS_DIR" ]
 then
-  HUBOT_ADAPTERS_DIR=$MY_DIR/adapters
+  HUBOT_ADAPTERS_DIR=$HUBOT_BIN_DIR/adapters
 fi
 
 
@@ -26,22 +26,22 @@ OPTIONS:
 EOF
 }
 
-PLUGINS=""
-ADAPTERS=""
-ADAPTER="$HUBOT_ADAPTERS_DIR/shell"
+HUBOT_PLUGINS=""
+HUBOT_ADAPTERS=""
+HUBOT_ADAPTER="$HUBOT_ADAPTERS_DIR/shell"
 
 # This is the only Hubot function available to the adapters
 # It is up to the adapters how to execute the plugins
 # (i.e. in serial or parallel) and what do do with the output.
 list_plugins() {
-    PLUGINS=`find $HUBOT_PLUGINS_DIR -maxdepth 1 -type f -perm -o+x`
+    HUBOT_PLUGINS=`find $HUBOT_PLUGINS_DIR -maxdepth 1 -type f -perm -o+x`
 }
 
 export -f list_plugins
 #export $PLUGINS
 
 list_adapters() {
-    ADAPTERS=`find $HUBOT_ADAPTERS_DIR/* -maxdepth 1 -type d`
+    HUBOT_ADAPTERS=`find $HUBOT_ADAPTERS_DIR/* -maxdepth 1 -type d`
 }
 
 
@@ -63,17 +63,17 @@ do
       l)
           list_adapters
           echo "Available adapters"
-          _print_paths $ADAPTERS
+          _print_paths $HUBOT_ADAPTERS
           exit 0
           ;;
       p)
           list_plugins
           echo "Available plugins"
-          _print_paths $PLUGINS
+          _print_paths $HUBOT_PLUGINS
           exit 0
           ;;
       a)
-          ADAPTER="$HUBOT_ADAPTERS_DIR/$OPTARG"
+          HUBOT_ADAPTER="$HUBOT_ADAPTERS_DIR/$OPTARG"
           ;;
       ?)
           usage
@@ -82,8 +82,8 @@ do
   esac
 done
 
-LISTEN="$ADAPTER/listen"
-SAY="$ADAPTER/say"
+LISTEN="$HUBOT_ADAPTER/listen"
+SAY="$HUBOT_ADAPTER/say"
 
 if [ ! -e "$LISTEN" ]
 then
@@ -113,7 +113,7 @@ $LISTEN |
 while read -r input
 do
     list_plugins
-    for plugin in $PLUGINS
+    for plugin in $HUBOT_PLUGINS
     do
         # Plugins are executed in parallel
         printf "$input\n" | $plugin | 
