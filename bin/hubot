@@ -109,12 +109,16 @@ then
     exit 1
 fi
 
-$LISTEN | while read -r input_line
+$LISTEN | 
+while read -r input
 do
     list_plugins
     for plugin in $PLUGINS
     do
         # Plugins are executed in parallel
-        $plugin "$input_line" | $SAY &
+        printf "$input\n" | $plugin | 
+        while read -r output
+        do printf "$output\n" | $SAY
+        done &
     done
 done

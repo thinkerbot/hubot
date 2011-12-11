@@ -3,7 +3,7 @@
 fortune_chat () {
   echo "$(fortune -s $* | tr '\r\n\t' ' ' | sed 's/  */ /g')"
 }
-case "$(echo $1 | tr '[A-Z]' '[a-z]')" in
+case "$(cat - | tr '[A-Z]' '[a-z]')" in
   :fortune)
     shift
     fortune_chat $* ;;

@@ -1,6 +1,2 @@
-#!/bin/sh
-
-while read -r input_line
-do
-  printf "\rHUBOT> $input_line\nHUMAN> "
-done
+#!/bin/bash
+printf "\rHUBOT> %s\nHUMAN> " "$(cat)"
