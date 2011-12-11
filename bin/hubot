@@ -110,7 +110,7 @@ then
 fi
 
 # Be thorough about cleaning up.  Ask nice and in 8 seconds be more direct.
-trap 'trap "sleep 8 && kill -KILL -$$ &" TERM; kill -TERM -$$' INT TERM EXIT
+trap 'trap "sleep 8 && kill -KILL 0 &" TERM; kill -TERM 0' INT TERM EXIT
 
 #
 # setup inbox fifos
