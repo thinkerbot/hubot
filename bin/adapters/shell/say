@@ -1,2 +1,5 @@
 #!/bin/bash
-printf "\rHUBOT> %s\nHUMAN> " "$(cat)"
+
+printf "\rHUBOT> " >&2
+printf "%s\n" "$(cat)"
+printf "HUMAN> " >&2
