@@ -4,6 +4,9 @@ subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
 room=${HUBOT_CAMPFIRE_ROOM:-}
 token=${HUBOT_CAMPFIRE_TOKEN:-}
 
+# Leave the room on exit
+trap 'curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/leave.xml"; exit' INT TERM EXIT
+
 while true
 do
     # Join the room
