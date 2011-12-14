@@ -4,13 +4,22 @@ subdomain=${HUBOT_CAMPFIRE_SUBDOMAIN:-}
 room=${HUBOT_CAMPFIRE_ROOM:-}
 token=${HUBOT_CAMPFIRE_TOKEN:-}
 
-# Join the room
-curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/join.xml"
+# Leave the room on exit
+trap 'curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/leave.xml"; exit' INT TERM EXIT
 
-# Replace CR with LF so the output will be line delimited. Then use sed to
-# extract the body such that it will properly expand when read as a line and
-# used like "$line" (requires 'read -r')
-curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$HUBOT_CAMPFIRE_ROOM/live.json | 
-  tr -u "\r" "\n" | 
-  sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
-  sed -le 's/\\\("\)/"/g'
+while true
+do
+    # Join the room
+    curl -s -u "$token:X" -X POST "https://$subdomain.campfirenow.com/room/$room/join.xml"
+
+    # Replace CR with LF so the output will be line delimited. Then use sed to
+    # extract the body such that it will properly expand when read as a line 
+    # and used like "$line" (requires 'read -r')
+    curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$HUBOT_CAMPFIRE_ROOM/live.json | 
+        tr -u "\r" "\n" | 
+        sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
+        sed -le 's/\\\("\)/"/g'
+
+    # Wait, then try to reconnect
+    sleep 1
+done
