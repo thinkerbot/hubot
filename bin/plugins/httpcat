@@ -1,30 +1,28 @@
 
-code=$(printf "$1" | grep -oE '(^| )[1-5][[:digit:]][[:digit:]]( |$)' | tr -d ' ')
-if ! [ "$code" = "" ]
-then
+for code in $(printf "$1" | grep -oE '(^| )[1-5][[:digit:]][[:digit:]]( |$)' | tr -d ' ')
+do
   # see https://gist.github.com/1477669 to generate this list
   cat <<CODES | grep -e "$code" | cut -d ' ' -f 2
-302 http://farm8.staticflickr.com/7019/6508023829_3d44c4ac16_s.jpg
-401 http://farm8.staticflickr.com/7148/6508023065_8dae48a30b_s.jpg
-403 http://farm8.staticflickr.com/7173/6508023617_f3ffc34e17_s.jpg
-404 http://farm8.staticflickr.com/7172/6508022985_b22200ced0_m.jpg
-404 http://farm8.staticflickr.com/7172/6508022985_b22200ced0_s.jpg
-405 http://farm8.staticflickr.com/7175/6508023523_996188af86_s.jpg
-406 http://farm8.staticflickr.com/7143/6508023119_b681209a58_s.jpg
-408 http://farm8.staticflickr.com/7018/6508023179_bab3eebce8_s.jpg
-409 http://farm8.staticflickr.com/7010/6508023259_b1c6f5a353_s.jpg
-413 http://farm8.staticflickr.com/7161/6508023747_1d60889626_s.jpg
-414 http://farm8.staticflickr.com/7152/6508023351_6732ed2f58_s.jpg
-417 http://farm8.staticflickr.com/7009/6508023679_cb3e88fa92_s.jpg
-418 http://farm8.staticflickr.com/7006/6508102407_a4de65687b_s.jpg
-426 http://farm8.staticflickr.com/7167/6509400771_33a1f59890_s.jpg
-429 http://farm8.staticflickr.com/7152/6509400997_25bb1bb4fb_s.jpg
-431 http://farm8.staticflickr.com/7144/6509400689_a67d026d0a_s.jpg
-444 http://farm8.staticflickr.com/7152/6509400599_52ca022f98_s.jpg
-500 http://farm8.staticflickr.com/7001/6509400855_aaaf915871_s.jpg
-502 http://farm8.staticflickr.com/7158/6508023429_735b433a36_s.jpg
-507 http://farm8.staticflickr.com/7160/6509400503_648dc8a2e5_s.jpg
-508 http://farm8.staticflickr.com/7025/6509400445_5fd9c7a9c3_s.jpg
-599 http://farm8.staticflickr.com/7033/6509400929_ced4746ee0_s.jpg
+302 http://farm8.staticflickr.com/7019/6508023829_3d44c4ac16.jpg
+401 http://farm8.staticflickr.com/7148/6508023065_8dae48a30b.jpg
+403 http://farm8.staticflickr.com/7173/6508023617_f3ffc34e17.jpg
+404 http://farm8.staticflickr.com/7172/6508022985_b22200ced0.jpg
+405 http://farm8.staticflickr.com/7175/6508023523_996188af86.jpg
+406 http://farm8.staticflickr.com/7143/6508023119_b681209a58.jpg
+408 http://farm8.staticflickr.com/7018/6508023179_bab3eebce8.jpg
+409 http://farm8.staticflickr.com/7010/6508023259_b1c6f5a353.jpg
+413 http://farm8.staticflickr.com/7161/6508023747_1d60889626.jpg
+414 http://farm8.staticflickr.com/7152/6508023351_6732ed2f58.jpg
+417 http://farm8.staticflickr.com/7009/6508023679_cb3e88fa92.jpg
+418 http://farm8.staticflickr.com/7006/6508102407_a4de65687b.jpg
+426 http://farm8.staticflickr.com/7167/6509400771_33a1f59890.jpg
+429 http://farm8.staticflickr.com/7152/6509400997_25bb1bb4fb.jpg
+431 http://farm8.staticflickr.com/7144/6509400689_a67d026d0a.jpg
+444 http://farm8.staticflickr.com/7152/6509400599_52ca022f98.jpg
+500 http://farm8.staticflickr.com/7001/6509400855_aaaf915871.jpg
+502 http://farm8.staticflickr.com/7158/6508023429_735b433a36.jpg
+507 http://farm8.staticflickr.com/7160/6509400503_648dc8a2e5.jpg
+508 http://farm8.staticflickr.com/7025/6509400445_5fd9c7a9c3.jpg
+599 http://farm8.staticflickr.com/7033/6509400929_ced4746ee0.jpg
 CODES
-fi
+done
