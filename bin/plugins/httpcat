@@ -4,28 +4,27 @@ if ! [ "$code" = "" ]
 then
   # see https://gist.github.com/1477669 to generate this list
   cat <<CODES | grep -e "$code" | cut -d ' ' -f 2
-302 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023829/in/set-72157628409467125
-401 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023065/in/set-72157628409467125
-403 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023617/in/set-72157628409467125
-404 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508022985/in/set-72157628409467125
-405 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023523/in/set-72157628409467125
-406 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023119/in/set-72157628409467125
-408 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023179/in/set-72157628409467125
-409 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023259/in/set-72157628409467125
-413 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023747/in/set-72157628409467125
-414 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023351/in/set-72157628409467125
-417 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023679/in/set-72157628409467125
-418 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508102407/in/set-72157628409467125
-426 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400771/in/set-72157628409467125
-429 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400997/in/set-72157628409467125
-431 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400689/in/set-72157628409467125
-444 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400599/in/set-72157628409467125
-500 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400855/in/set-72157628409467125
-502 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6508023429/in/set-72157628409467125
-507 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400503/in/set-72157628409467125
-508 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400445/in/set-72157628409467125
-599 http://www.flickr.com/photos/girliemac/sets/72157628409467125/photos/girliemac/6509400929/in/set-72157628409467125
+302 http://farm8.staticflickr.com/7019/6508023829_3d44c4ac16_s.jpg
+401 http://farm8.staticflickr.com/7148/6508023065_8dae48a30b_s.jpg
+403 http://farm8.staticflickr.com/7173/6508023617_f3ffc34e17_s.jpg
+404 http://farm8.staticflickr.com/7172/6508022985_b22200ced0_m.jpg
+404 http://farm8.staticflickr.com/7172/6508022985_b22200ced0_s.jpg
+405 http://farm8.staticflickr.com/7175/6508023523_996188af86_s.jpg
+406 http://farm8.staticflickr.com/7143/6508023119_b681209a58_s.jpg
+408 http://farm8.staticflickr.com/7018/6508023179_bab3eebce8_s.jpg
+409 http://farm8.staticflickr.com/7010/6508023259_b1c6f5a353_s.jpg
+413 http://farm8.staticflickr.com/7161/6508023747_1d60889626_s.jpg
+414 http://farm8.staticflickr.com/7152/6508023351_6732ed2f58_s.jpg
+417 http://farm8.staticflickr.com/7009/6508023679_cb3e88fa92_s.jpg
+418 http://farm8.staticflickr.com/7006/6508102407_a4de65687b_s.jpg
+426 http://farm8.staticflickr.com/7167/6509400771_33a1f59890_s.jpg
+429 http://farm8.staticflickr.com/7152/6509400997_25bb1bb4fb_s.jpg
+431 http://farm8.staticflickr.com/7144/6509400689_a67d026d0a_s.jpg
+444 http://farm8.staticflickr.com/7152/6509400599_52ca022f98_s.jpg
+500 http://farm8.staticflickr.com/7001/6509400855_aaaf915871_s.jpg
+502 http://farm8.staticflickr.com/7158/6508023429_735b433a36_s.jpg
+507 http://farm8.staticflickr.com/7160/6509400503_648dc8a2e5_s.jpg
+508 http://farm8.staticflickr.com/7025/6509400445_5fd9c7a9c3_s.jpg
+599 http://farm8.staticflickr.com/7033/6509400929_ced4746ee0_s.jpg
 CODES
-
-  echo "(see also: http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)"
 fi
