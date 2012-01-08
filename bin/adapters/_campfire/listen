@@ -15,7 +15,7 @@ do
     # Replace CR with LF so the output will be line delimited. Then use sed to
     # extract the body such that it will properly expand when read as a line 
     # and used like "$line" (requires 'read -r')
-    curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$HUBOT_CAMPFIRE_ROOM/live.json | 
+    curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$room/live.json | 
         tr -u "\r" "\n" | 
         sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
         sed -le 's/\\\("\)/"/g'
