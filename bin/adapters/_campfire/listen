@@ -15,10 +15,26 @@ do
     # Replace CR with LF so the output will be line delimited. Then use sed to
     # extract the body such that it will properly expand when read as a line 
     # and used like "$line" (requires 'read -r')
-    curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$room/live.json | 
+    #
+    # As a complication, this requires unbuffered output streams.  Some systems
+    # implement -u on tr but not sed (OS X), or vice-versa (Ubuntu).  These are
+    # the known ways to achieve unbuffered output.
+    if which stdbuf > /dev/null
+    then
+        curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$room/live.json | 
+        stdbuf -o0 tr "\r" "\n" | 
+        stdbuf -o0 sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
+        stdbuf -o0 sed -le 's/\\\("\)/"/g'
+    elif man tr | grep -q -- -u
+    then
+        curl -sN --max-time 31536000 -u "$token:X" https://streaming.campfirenow.com/room/$room/live.json | 
         tr -u "\r" "\n" | 
         sed -le 's/.*"body":"\(.\{1,\}\)","id":.*/\1/' | 
         sed -le 's/\\\("\)/"/g'
+    else
+        printf "The campfire adapter is unable to run on your system :(\n" >&2
+        exit 1
+    fi
 
     # Wait, then try to reconnect
     sleep 1
